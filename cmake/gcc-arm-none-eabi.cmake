@@ -39,6 +39,11 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Os -g0")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fno-rtti -fno-exceptions -fno-threadsafe-statics")
 
+# Add C++ standard library include paths for arm-none-eabi toolchain
+# This ensures clangd and other tools can find C++ standard library headers like <concepts>
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/arm-none-eabi/include/c++/14.2.0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I/usr/arm-none-eabi/include/c++/14.2.0/arm-none-eabi")
+
 set(CMAKE_EXE_LINKER_FLAGS "${TARGET_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -T \"${CMAKE_SOURCE_DIR}/STM32H753XX_FLASH.ld\"")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --specs=nano.specs")
