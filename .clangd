@@ -1,0 +1,7 @@
+CompileFlags:
+  Compiler: arm-none-eabi-g++
+  Add: 
+    - -std=gnu++23
+    - -mcpu=cortex-m7
+    - -mfpu=fpv5-d16
+    - -mfloat-abi=hard
