@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug STM32H753 (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Debug/ads117l11-v2.elf", 
+            "device": "STM32H753",
+            "interface": "swd",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32h7x_dual_bank.cfg"
+            ],
+            "gdbPath": "arm-none-eabi-gdb",
+            "svdFile": "${workspaceFolder}/path/to/STM32H753.svd",
+            "runToEntryPoint": "main",
+            "postResetCommands": [
+                "monitor reset halt"
+            ]
+        }
+    ]
+}
