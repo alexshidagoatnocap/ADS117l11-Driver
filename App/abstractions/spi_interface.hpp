@@ -1,5 +1,6 @@
 #pragma once
 
+#include "abstractions/status_codes.hpp"
 #include <cstdint>
 #include <span>
 
@@ -9,18 +10,20 @@ class SpiInterface {
   public:
 	~SpiInterface() = default;
 
-	bool Init();
+	abstractions::Status init(this auto &&self) { return self.initImpl(); }
 
-	bool Deinit();
+	abstractions::Status deinit(this auto &&self) { return self.deinitImpl(); }
 
-	/// Enable/disable chip select
-	bool SetChipSelect(bool enable);
+	abstractions::Status setChipSelect(this auto &&self,
+									   abstractions::PinState state) {
+		return self.setChipSelectImpl(state);
+	}
 
-	/// Perform SPI transaction
-	/// @param tx_data Data to transmit (can be empty for rx-only)
-	/// @param rx_data Buffer to receive data into (can be empty for tx-only)
-	/// @return true on success, false on error
-	bool Transfer(std::span<const uint8_t> tx_data, std::span<uint8_t> rx_data);
+	abstractions::Status transmitReceive(this auto &&self,
+										 std::span<const uint8_t> tx_data,
+										 std::span<uint8_t> rx_data) {
+		return self.transmitReceiveImpl(tx_data, rx_data);
+	}
 };
 
 } // namespace abstractions

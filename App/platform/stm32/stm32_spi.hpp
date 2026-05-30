@@ -1,0 +1,29 @@
+#pragma once
+
+#include "abstractions/spi_interface.hpp"
+#include "stm32h753xx.h"
+#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_gpio.h"
+#include <cstdint>
+
+namespace platform::stm32hal {
+class Spi : abstractions::SpiInterface {
+  private:
+	SPI_HandleTypeDef *m_hspi;
+	GPIO_TypeDef *m_gpioPort;
+	uint16_t m_csPin;
+
+  public:
+	explicit Spi(SPI_HandleTypeDef *hspi,
+				 const std::pair<GPIO_TypeDef *, uint16_t> &csPin);
+
+	abstractions::Status initImpl();
+
+	abstractions::Status deinitImpl();
+
+	abstractions::Status setChipSelectImpl(abstractions::PinState state);
+
+	abstractions::Status transmitReceiveImpl(std::span<const uint8_t> tx_data,
+											 std::span<uint8_t> rx_data);
+};
+} // namespace platform::stm32hal

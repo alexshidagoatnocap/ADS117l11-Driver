@@ -53,14 +53,12 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     Core/Src/cpp_main.cpp
-    App/spi.cpp
-    App/ads117l11.cpp
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
-    App/
+    App/platform/stm32
 )
 
 # Add project symbols (macros)
@@ -74,7 +72,7 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
-    app-drivers-platform
 
     # Add user defined libraries
+    app-drivers-platform
 )
