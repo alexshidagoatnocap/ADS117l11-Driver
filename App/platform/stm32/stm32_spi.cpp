@@ -6,12 +6,34 @@
 
 namespace platform::stm32hal {
 
-Spi::Spi(SPI_HandleTypeDef *hspi,
-		 const std::pair<GPIO_TypeDef *, uint16_t> &csPin)
-	: m_hspi(hspi), m_gpioPort(csPin.first), m_csPin(csPin.second) {}
+abstractions::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
+								   GPIO_TypeDef *csGpioPort, uint16_t csPin) {
+	using namespace abstractions;
+	using enum Status;
+
+	if (!hspi || !csGpioPort) {
+		return ABSTRACT_INIT_FAIL;
+	}
+
+	// WARN: There could be a case of a silent failure if a GPIO was set
+	// incorrectly
+
+	m_hspi = hspi;
+	m_gpioPort = csGpioPort;
+	m_csPin = csPin;
+
+	isInit = true;
+
+	return ABSTRACT_OK;
+}
 
 abstractions::Status Spi::setChipSelectImpl(abstractions::PinState state) {
 	using namespace abstractions;
+	using enum Status;
+
+	if (!isInit) {
+		return ABSTRACT_NOT_INIT;
+	}
 
 	switch (state) {
 	case PinState::HIGH:
@@ -23,16 +45,23 @@ abstractions::Status Spi::setChipSelectImpl(abstractions::PinState state) {
 		break;
 	}
 
-	return Status::ABSTRACT_OK;
+	return ABSTRACT_OK;
 }
 
 abstractions::Status Spi::transmitReceiveImpl(std::span<const uint8_t> tx_data,
 											  std::span<uint8_t> rx_data) {
+	using namespace abstractions;
+	using enum Status;
+
+	if (!isInit) {
+		return ABSTRACT_NOT_INIT;
+	}
+
 	if (HAL_SPI_TransmitReceive(m_hspi, tx_data.data(), rx_data.data(),
 								tx_data.size(), HAL_MAX_DELAY) != HAL_OK) {
-		return abstractions::Status::ABSTRACT_ERROR;
+		return ABSTRACT_ERROR;
 	}
-	return abstractions::Status::ABSTRACT_OK;
+	return ABSTRACT_OK;
 }
 
 } // namespace platform::stm32hal

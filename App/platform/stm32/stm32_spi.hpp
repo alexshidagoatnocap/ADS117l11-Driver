@@ -7,17 +7,18 @@
 #include <cstdint>
 
 namespace platform::stm32hal {
-class Spi : abstractions::SpiInterface {
+class Spi : public abstractions::SpiInterface {
   private:
 	SPI_HandleTypeDef *m_hspi;
 	GPIO_TypeDef *m_gpioPort;
 	uint16_t m_csPin;
+	bool isInit{false};
 
   public:
-	explicit Spi(SPI_HandleTypeDef *hspi,
-				 const std::pair<GPIO_TypeDef *, uint16_t> &csPin);
+	Spi();
 
-	abstractions::Status initImpl();
+	abstractions::Status initImpl(SPI_HandleTypeDef *hspi,
+								  GPIO_TypeDef *csGpioPort, uint16_t csPin);
 
 	abstractions::Status deinitImpl();
 

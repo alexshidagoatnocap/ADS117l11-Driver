@@ -3,6 +3,7 @@
 #include "abstractions/status_codes.hpp"
 #include <cstdint>
 #include <span>
+#include <utility>
 
 namespace abstractions {
 
@@ -10,7 +11,10 @@ class SpiInterface {
   public:
 	~SpiInterface() = default;
 
-	abstractions::Status init(this auto &&self) { return self.initImpl(); }
+	template <typename... Args>
+	abstractions::Status init(this auto &&self, Args &&...args) {
+		return self.initImpl(std::forward<Args>(args)...);
+	}
 
 	abstractions::Status deinit(this auto &&self) { return self.deinitImpl(); }
 
