@@ -46,8 +46,7 @@ COM_InitTypeDef BspCOMInit;
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
-uint8_t txBuffer[] = {"I'm new bro"};
-uint8_t rxBuffer[sizeof(txBuffer)];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,14 +119,13 @@ int main(void) {
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	// application_loop();
+	application_loop();
 
 	while (1) {
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-		HAL_SPI_TransmitReceive(&hspi1, txBuffer, rxBuffer, sizeof(txBuffer),
-								HAL_MAX_DELAY);
-		// HAL_SPI_Transmit(&hspi2, txBuffer, sizeof(txBuffer), 100);
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+		// HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+		// HAL_SPI_TransmitReceive(&hspi1, txBuffer, rxBuffer, sizeof(txBuffer),
+		// 						HAL_MAX_DELAY);
+		// HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

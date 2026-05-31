@@ -12,14 +12,14 @@ void application_init() {}
 
 void application_loop(void) {
 	platform::stm32hal::Spi spiObj;
-	spiObj.init(&hspi1, GPIOC, GPIO_PIN_8);
+	spiObj.init(&hspi1, GPIOD, GPIO_PIN_14);
 
-	uint8_t tx_buffer[] = {'H', 'I'};
-	uint8_t rx_buffer[32];
+	uint8_t txBuffer[] = {"I'm new bro"};
+	uint8_t rxBuffer[sizeof(txBuffer)];
 
 	while (1) {
 		spiObj.setChipSelect(abstractions::PinState::LOW);
-		spiObj.transmitReceiveImpl(tx_buffer, rx_buffer);
+		spiObj.transmitReceiveImpl(txBuffer, rxBuffer);
 		spiObj.setChipSelect(abstractions::PinState::HIGH);
 	}
 }
