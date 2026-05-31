@@ -15,8 +15,8 @@ abstractions::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
 		return ABSTRACT_INIT_FAIL;
 	}
 
-	// WARN: There could be a case of a silent failure if a GPIO was set
-	// incorrectly
+	// WARN: There could be a case of a silent failure if a GPIO pin was set
+	// to the wrong pin or not initialized by the user.
 
 	m_hspi = hspi;
 	m_gpioPort = csGpioPort;

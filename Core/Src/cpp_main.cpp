@@ -1,18 +1,25 @@
 #include "cpp_main.hpp"
+#include "abstractions/spi_interface.hpp"
+#include "main.h"
 #include "stm32_spi.hpp"
+#include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_spi.h"
-#include <utility>
+#include <cstdint>
 
 SPI_HandleTypeDef spi_handler;
 
-void cpp_spi_init(SPI_HandleTypeDef hspi) {
-	spi_handler = hspi;
-	return;
-}
+void application_init() {}
 
-void application_entry(void) {
+void application_loop(void) {
+	platform::stm32hal::Spi spiObj;
+	spiObj.init(&hspi1, GPIOC, GPIO_PIN_8);
+
+	uint8_t tx_buffer[] = {'H', 'I'};
+	uint8_t rx_buffer[32];
+
 	while (1) {
-		// BSP_LED_Toggle(LED1);
-		// HAL_Delay(100);
+		spiObj.setChipSelect(abstractions::PinState::LOW);
+		spiObj.transmitReceiveImpl(tx_buffer, rx_buffer);
+		spiObj.setChipSelect(abstractions::PinState::HIGH);
 	}
 }

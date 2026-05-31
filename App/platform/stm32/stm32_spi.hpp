@@ -15,7 +15,7 @@ class Spi : public abstractions::SpiInterface {
 	bool isInit{false};
 
   public:
-	Spi();
+	Spi() = default;
 
 	abstractions::Status initImpl(SPI_HandleTypeDef *hspi,
 								  GPIO_TypeDef *csGpioPort, uint16_t csPin);
