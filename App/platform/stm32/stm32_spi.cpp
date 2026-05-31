@@ -22,7 +22,7 @@ abstractions::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
 	m_gpioPort = csGpioPort;
 	m_csPin = csPin;
 
-	isInit = true;
+	m_isInit = true;
 
 	return ABSTRACT_OK;
 }
@@ -31,7 +31,7 @@ abstractions::Status Spi::setChipSelectImpl(abstractions::PinState state) {
 	using namespace abstractions;
 	using enum Status;
 
-	if (!isInit) {
+	if (!m_isInit) {
 		return ABSTRACT_NOT_INIT;
 	}
 
@@ -48,12 +48,42 @@ abstractions::Status Spi::setChipSelectImpl(abstractions::PinState state) {
 	return ABSTRACT_OK;
 }
 
+abstractions::Status Spi::transmitImpl(std::span<const uint8_t> tx_data) {
+	using namespace abstractions;
+	using enum Status;
+
+	if (!m_isInit) {
+		return ABSTRACT_NOT_INIT;
+	}
+
+	if (HAL_SPI_Transmit(m_hspi, tx_data.data(), tx_data.size(),
+						 HAL_MAX_DELAY) != HAL_OK) {
+		return ABSTRACT_ERROR;
+	}
+	return ABSTRACT_OK;
+}
+
+abstractions::Status Spi::receiveImpl(std::span<uint8_t> rx_data) {
+	using namespace abstractions;
+	using enum Status;
+
+	if (!m_isInit) {
+		return ABSTRACT_NOT_INIT;
+	}
+
+	if (HAL_SPI_Receive(m_hspi, rx_data.data(), rx_data.size(),
+						HAL_MAX_DELAY) != HAL_OK) {
+		return ABSTRACT_ERROR;
+	}
+	return ABSTRACT_OK;
+}
+
 abstractions::Status Spi::transmitReceiveImpl(std::span<const uint8_t> tx_data,
 											  std::span<uint8_t> rx_data) {
 	using namespace abstractions;
 	using enum Status;
 
-	if (!isInit) {
+	if (!m_isInit) {
 		return ABSTRACT_NOT_INIT;
 	}
 

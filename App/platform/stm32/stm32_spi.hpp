@@ -1,7 +1,6 @@
 #pragma once
 
 #include "abstractions/spi_interface.hpp"
-#include "stm32h753xx.h"
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_gpio.h"
 #include <cstdint>
@@ -12,7 +11,7 @@ class Spi : public abstractions::SpiInterface {
 	SPI_HandleTypeDef *m_hspi;
 	GPIO_TypeDef *m_gpioPort;
 	uint16_t m_csPin;
-	bool isInit{false};
+	bool m_isInit{false};
 
   public:
 	Spi() = default;
@@ -23,6 +22,10 @@ class Spi : public abstractions::SpiInterface {
 	abstractions::Status deinitImpl();
 
 	abstractions::Status setChipSelectImpl(abstractions::PinState state);
+
+	abstractions::Status transmitImpl(std::span<const uint8_t> tx_data);
+
+	abstractions::Status receiveImpl(std::span<uint8_t> rx_data);
 
 	abstractions::Status transmitReceiveImpl(std::span<const uint8_t> tx_data,
 											 std::span<uint8_t> rx_data);
