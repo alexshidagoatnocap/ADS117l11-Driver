@@ -9,15 +9,15 @@
 SPI_HandleTypeDef spi_handler;
 
 void application_entry(void) {
-	platform::stm32hal::Spi spiObj;
-	spiObj.init(&hspi1, GPIOD, GPIO_PIN_14);
+	platform::stm32hal::Spi spi1;
+	spi1.init(&hspi1, GPIOD, GPIO_PIN_14);
 
 	uint8_t txBuffer[] = {"I'm new bro"};
 	uint8_t rxBuffer[sizeof(txBuffer)];
 
 	while (1) {
-		spiObj.csLow();
-		spiObj.transmitReceiveImpl(txBuffer, rxBuffer);
-		spiObj.csHigh();
+		spi1.csLow();
+		spi1.transmitReceive(txBuffer, rxBuffer);
+		spi1.csHigh();
 	}
 }

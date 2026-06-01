@@ -11,8 +11,12 @@ class SpiInterface {
   public:
 	~SpiInterface() = default;
 
+	// User will call these methods in their respective implementations
+
 	template <typename... Args>
 	DAL::Status init(this auto &&self, Args &&...args) {
+		// Perfect forwarding args because init impls can be different
+		// on every platform or HAL
 		return self.initImpl(std::forward<Args>(args)...);
 	}
 
@@ -36,7 +40,10 @@ class SpiInterface {
 		return self.transmitReceiveImpl(tx_data, rx_data);
 	}
 
-  protected:
+	// User will need to implement these methods in their respective platform
+	// implementations
+
+  private:
 	DAL::Status initImpl();
 	DAL::Status deinitImpl();
 	DAL::Status csHighImpl();

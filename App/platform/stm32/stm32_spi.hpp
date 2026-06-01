@@ -8,13 +8,12 @@
 namespace platform::stm32hal {
 class Spi : public DAL::SpiInterface {
   private:
+	friend class DAL::SpiInterface;
+
 	SPI_HandleTypeDef *m_hspi;
 	GPIO_TypeDef *m_gpioPort;
 	uint16_t m_csPin;
 	bool m_isInit{false};
-
-  public:
-	Spi() = default;
 
 	DAL::Status initImpl(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csGpioPort,
 						 uint16_t csPin);
@@ -33,5 +32,8 @@ class Spi : public DAL::SpiInterface {
 
 	DAL::Status transmitReceiveImpl(std::span<const uint8_t> tx_data,
 									std::span<uint8_t> rx_data);
+
+  public:
+	Spi() = default;
 };
 } // namespace platform::stm32hal

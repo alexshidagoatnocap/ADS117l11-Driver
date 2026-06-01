@@ -8,6 +8,6 @@ template <DAL::SpiImpl Spi> class ADS117L11 {
 	Spi m_spiObj{};
 
   public:
-	explicit ADS117L11(Spi spiObj) = default;
+	explicit ADS117L11(Spi spiObj) : m_spiObj(spiObj) {};
 };
 } // namespace drivers
