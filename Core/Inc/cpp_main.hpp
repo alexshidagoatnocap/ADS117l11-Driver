@@ -7,8 +7,7 @@ extern "C" {
 #include "stm32h7xx_hal_spi.h"
 #endif
 
-void application_init();
-void application_loop(void);
+void application_entry(void);
 
 #ifdef __cplusplus
 }

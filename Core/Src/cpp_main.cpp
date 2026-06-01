@@ -8,9 +8,7 @@
 
 SPI_HandleTypeDef spi_handler;
 
-void application_init() {}
-
-void application_loop(void) {
+void application_entry(void) {
 	platform::stm32hal::Spi spiObj;
 	spiObj.init(&hspi1, GPIOD, GPIO_PIN_14);
 
@@ -18,8 +16,8 @@ void application_loop(void) {
 	uint8_t rxBuffer[sizeof(txBuffer)];
 
 	while (1) {
-		spiObj.setChipSelect(abstractions::PinState::LOW);
+		spiObj.csLow();
 		spiObj.transmitReceiveImpl(txBuffer, rxBuffer);
-		spiObj.setChipSelect(abstractions::PinState::HIGH);
+		spiObj.csHigh();
 	}
 }

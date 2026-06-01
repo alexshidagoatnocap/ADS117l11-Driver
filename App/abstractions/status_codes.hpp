@@ -1,5 +1,8 @@
+#pragma once
+
 #include <cstdint>
-namespace abstractions {
+
+namespace DAL {
 
 enum class Status : uint8_t {
 	ABSTRACT_OK,
@@ -10,4 +13,4 @@ enum class Status : uint8_t {
 
 enum class PinState : bool { LOW = false, HIGH = true };
 
-} // namespace abstractions
+} // namespace DAL

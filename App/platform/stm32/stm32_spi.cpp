@@ -1,14 +1,15 @@
 #include "platform/stm32/stm32_spi.hpp"
 #include "abstractions/spi_interface.hpp"
+#include "abstractions/status_codes.hpp"
 #include "stm32h7xx_hal_def.h"
 #include "stm32h7xx_hal_gpio.h"
 #include "stm32h7xx_hal_spi.h"
 
 namespace platform::stm32hal {
 
-abstractions::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
+DAL::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
 								   GPIO_TypeDef *csGpioPort, uint16_t csPin) {
-	using namespace abstractions;
+	using namespace DAL;
 	using enum Status;
 
 	if (!hspi || !csGpioPort) {
@@ -27,29 +28,34 @@ abstractions::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
 	return ABSTRACT_OK;
 }
 
-abstractions::Status Spi::setChipSelectImpl(abstractions::PinState state) {
-	using namespace abstractions;
+DAL::Status Spi::csHighImpl() {
+	using namespace DAL;
 	using enum Status;
 
 	if (!m_isInit) {
 		return ABSTRACT_NOT_INIT;
 	}
 
-	switch (state) {
-	case PinState::HIGH:
-		HAL_GPIO_WritePin(m_gpioPort, m_csPin, GPIO_PIN_SET);
-		break;
-	// when low
-	default:
-		HAL_GPIO_WritePin(m_gpioPort, m_csPin, GPIO_PIN_RESET);
-		break;
-	}
+	HAL_GPIO_WritePin(m_gpioPort, m_csPin, GPIO_PIN_SET);
 
 	return ABSTRACT_OK;
 }
 
-abstractions::Status Spi::transmitImpl(std::span<const uint8_t> tx_data) {
-	using namespace abstractions;
+DAL::Status Spi::csLowImpl() {
+	using namespace DAL;
+	using enum Status;
+
+	if (!m_isInit) {
+		return ABSTRACT_NOT_INIT;
+	}
+
+	HAL_GPIO_WritePin(m_gpioPort, m_csPin, GPIO_PIN_RESET);
+
+	return ABSTRACT_OK;
+}
+
+DAL::Status Spi::transmitImpl(std::span<const uint8_t> tx_data) {
+	using namespace DAL;
 	using enum Status;
 
 	if (!m_isInit) {
@@ -63,8 +69,8 @@ abstractions::Status Spi::transmitImpl(std::span<const uint8_t> tx_data) {
 	return ABSTRACT_OK;
 }
 
-abstractions::Status Spi::receiveImpl(std::span<uint8_t> rx_data) {
-	using namespace abstractions;
+DAL::Status Spi::receiveImpl(std::span<uint8_t> rx_data) {
+	using namespace DAL;
 	using enum Status;
 
 	if (!m_isInit) {
@@ -78,9 +84,9 @@ abstractions::Status Spi::receiveImpl(std::span<uint8_t> rx_data) {
 	return ABSTRACT_OK;
 }
 
-abstractions::Status Spi::transmitReceiveImpl(std::span<const uint8_t> tx_data,
+DAL::Status Spi::transmitReceiveImpl(std::span<const uint8_t> tx_data,
 											  std::span<uint8_t> rx_data) {
-	using namespace abstractions;
+	using namespace DAL;
 	using enum Status;
 
 	if (!m_isInit) {

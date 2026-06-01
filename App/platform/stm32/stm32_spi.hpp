@@ -6,7 +6,7 @@
 #include <cstdint>
 
 namespace platform::stm32hal {
-class Spi : public abstractions::SpiInterface {
+class Spi : public DAL::SpiInterface {
   private:
 	SPI_HandleTypeDef *m_hspi;
 	GPIO_TypeDef *m_gpioPort;
@@ -16,18 +16,22 @@ class Spi : public abstractions::SpiInterface {
   public:
 	Spi() = default;
 
-	abstractions::Status initImpl(SPI_HandleTypeDef *hspi,
-								  GPIO_TypeDef *csGpioPort, uint16_t csPin);
+	DAL::Status initImpl(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csGpioPort,
+						 uint16_t csPin);
 
-	abstractions::Status deinitImpl();
+	DAL::Status deinitImpl();
 
-	abstractions::Status setChipSelectImpl(abstractions::PinState state);
+	DAL::Status csHighImpl();
 
-	abstractions::Status transmitImpl(std::span<const uint8_t> tx_data);
+	DAL::Status csLowImpl();
 
-	abstractions::Status receiveImpl(std::span<uint8_t> rx_data);
+	DAL::Status setChipSelectImpl(DAL::PinState state);
 
-	abstractions::Status transmitReceiveImpl(std::span<const uint8_t> tx_data,
-											 std::span<uint8_t> rx_data);
+	DAL::Status transmitImpl(std::span<const uint8_t> tx_data);
+
+	DAL::Status receiveImpl(std::span<uint8_t> rx_data);
+
+	DAL::Status transmitReceiveImpl(std::span<const uint8_t> tx_data,
+									std::span<uint8_t> rx_data);
 };
 } // namespace platform::stm32hal

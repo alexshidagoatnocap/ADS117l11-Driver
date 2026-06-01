@@ -5,38 +5,45 @@
 #include <span>
 #include <utility>
 
-namespace abstractions {
+namespace DAL {
 
 class SpiInterface {
   public:
 	~SpiInterface() = default;
 
 	template <typename... Args>
-	abstractions::Status init(this auto &&self, Args &&...args) {
+	DAL::Status init(this auto &&self, Args &&...args) {
 		return self.initImpl(std::forward<Args>(args)...);
 	}
 
-	abstractions::Status deinit(this auto &&self) { return self.deinitImpl(); }
+	DAL::Status deinit(this auto &&self) { return self.deinitImpl(); }
 
-	abstractions::Status setChipSelect(this auto &&self,
-									   abstractions::PinState state) {
-		return self.setChipSelectImpl(state);
-	}
+	DAL::Status csHigh(this auto &&self) { return self.csHighImpl(); }
 
-	abstractions::Status transmit(this auto &&self,
-								  std::span<const uint8_t> tx_data) {
+	DAL::Status csLow(this auto &&self) { return self.csLowImpl(); }
+
+	DAL::Status transmit(this auto &&self, std::span<const uint8_t> tx_data) {
 		return self.transmitImpl(tx_data);
 	}
 
-	abstractions::Status receive(this auto &&self, std::span<uint8_t> rx_data) {
+	DAL::Status receive(this auto &&self, std::span<uint8_t> rx_data) {
 		return self.receiveImpl(rx_data);
 	}
 
-	abstractions::Status transmitReceive(this auto &&self,
-										 std::span<const uint8_t> tx_data,
-										 std::span<uint8_t> rx_data) {
+	DAL::Status transmitReceive(this auto &&self,
+								std::span<const uint8_t> tx_data,
+								std::span<uint8_t> rx_data) {
 		return self.transmitReceiveImpl(tx_data, rx_data);
 	}
+
+  protected:
+	DAL::Status initImpl();
+	DAL::Status deinitImpl();
+	DAL::Status csHighImpl();
+	DAL::Status csLowImpl();
+	DAL::Status transmitImpl();
+	DAL::Status receiveImpl();
+	DAL::Status transmitReceiveImpl();
 };
 
-} // namespace abstractions
+} // namespace DAL
