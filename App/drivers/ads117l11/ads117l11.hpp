@@ -12,6 +12,9 @@ namespace drivers::ADS117L11 {
 template <DAL::SpiImpl Spi> class Driver {
 	Spi m_spiObj{};
 
+	// TODO: Make array sizes 2, 3, or 4 depending on whether you have status,
+	// and/or CRC
+
 	std::array<uint8_t, 2> m_txBuffer{};
 	std::array<uint8_t, 2> m_rxBuffer{};
 
@@ -42,7 +45,5 @@ template <DAL::SpiImpl Spi> class Driver {
 		return m_spiObj.transmit(m_txBuffer);
 	}
 };
-
-template <DAL::SpiImpl Spi> Driver(Spi) -> Driver<Spi>;
 
 } // namespace drivers::ADS117L11
