@@ -7,8 +7,8 @@
 
 namespace platform::stm32hal {
 
-DAL::Status Spi::initImpl(SPI_HandleTypeDef *hspi,
-								   GPIO_TypeDef *csGpioPort, uint16_t csPin) {
+DAL::Status Spi::initImpl(SPI_HandleTypeDef *hspi, GPIO_TypeDef *csGpioPort,
+						  uint16_t csPin) {
 	using namespace DAL;
 	using enum Status;
 
@@ -62,10 +62,13 @@ DAL::Status Spi::transmitImpl(std::span<const uint8_t> tx_data) {
 		return ABSTRACT_NOT_INIT;
 	}
 
+	csLowImpl();
 	if (HAL_SPI_Transmit(m_hspi, tx_data.data(), tx_data.size(),
 						 HAL_MAX_DELAY) != HAL_OK) {
+		csHighImpl();
 		return ABSTRACT_ERROR;
 	}
+	csHighImpl();
 	return ABSTRACT_OK;
 }
 
@@ -77,15 +80,18 @@ DAL::Status Spi::receiveImpl(std::span<uint8_t> rx_data) {
 		return ABSTRACT_NOT_INIT;
 	}
 
+	csLowImpl();
 	if (HAL_SPI_Receive(m_hspi, rx_data.data(), rx_data.size(),
 						HAL_MAX_DELAY) != HAL_OK) {
+		csHighImpl();
 		return ABSTRACT_ERROR;
 	}
+	csHighImpl();
 	return ABSTRACT_OK;
 }
 
 DAL::Status Spi::transmitReceiveImpl(std::span<const uint8_t> tx_data,
-											  std::span<uint8_t> rx_data) {
+									 std::span<uint8_t> rx_data) {
 	using namespace DAL;
 	using enum Status;
 
@@ -93,10 +99,13 @@ DAL::Status Spi::transmitReceiveImpl(std::span<const uint8_t> tx_data,
 		return ABSTRACT_NOT_INIT;
 	}
 
+	csLowImpl();
 	if (HAL_SPI_TransmitReceive(m_hspi, tx_data.data(), rx_data.data(),
 								tx_data.size(), HAL_MAX_DELAY) != HAL_OK) {
+		csHighImpl();
 		return ABSTRACT_ERROR;
 	}
+	csHighImpl();
 	return ABSTRACT_OK;
 }
 

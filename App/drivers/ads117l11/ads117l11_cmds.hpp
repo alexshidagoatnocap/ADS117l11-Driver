@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <utility>
 
 namespace drivers::ADS117L11 {
 
@@ -21,7 +22,12 @@ enum class Register : uint8_t {
 	OFFSET0 = 0xb,
 	GAIN1 = 0xc,
 	GAIN0 = 0xd,
-	CRC = 0xf
+	CRC_REG = 0xf
 };
+
+inline uint8_t operator+(drivers::ADS117L11::Command cmd,
+						 drivers::ADS117L11::Register reg) {
+	return std::to_underlying(cmd) + std::to_underlying(reg);
+}
 
 } // namespace drivers::ADS117L11

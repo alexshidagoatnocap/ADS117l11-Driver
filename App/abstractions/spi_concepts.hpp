@@ -2,8 +2,6 @@
 
 #include "abstractions/spi_interface.hpp"
 #include <concepts>
-#include <cstdint>
-#include <span>
 
 namespace DAL {
 
